@@ -2,7 +2,7 @@
 
 Projeto final da disciplina de Introdução a Algoritmos/Programação, desenvolvido com Python e Pygame.
 
-> **Observação ao professor:** Este projeto foi desenvolvido com maior agilidade pois o aluno já possuía uma versão anterior do jogo implementada em linguagem C, desenvolvida como exercício pessoal durante estudos no Ibmec. A lógica central (avaliação de palpites, ranking e sistema de pontuação) foi reescrita do zero em Python, seguindo os conceitos e a estrutura exigidos pela disciplina.
+> **Observação ao professor:** Este projeto foi desenvolvido com maior agilidade pois já possuía uma versão anterior do jogo implementada em linguagem C, desenvolvida como exercício pessoal durante estudos no Ibmec. A lógica central (avaliação de palpites, ranking e sistema de pontuação) foi reescrita do zero em Python, seguindo os conceitos e a estrutura exigidos pela disciplina.
 
 ## Integrantes do grupo
 
