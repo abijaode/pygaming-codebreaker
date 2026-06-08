@@ -2,6 +2,8 @@
 
 Projeto final da disciplina de Introdução a Algoritmos/Programação, desenvolvido com Python e Pygame.
 
+> **Observação ao professor:** Este projeto foi desenvolvido com maior agilidade pois o aluno já possuía uma versão anterior do jogo implementada em linguagem C, desenvolvida como exercício pessoal durante estudos no Ibmec. A lógica central (avaliação de palpites, ranking e sistema de pontuação) foi reescrita do zero em Python, seguindo os conceitos e a estrutura exigidos pela disciplina.
+
 ## Integrantes do grupo
 
 - Lucas Abijaode Alvarenga
@@ -46,13 +48,13 @@ Descobrir o código secreto de 5 caracteres alfanuméricos em no máximo 6 tenta
 ## Como executar o projeto
 
 ### 1. Clonar o repositório
-git clone LINK_DO_REPOSITORIO
-cd PYGAME
+git clone https://github.com/abijaode/pygaming.git
+cd pygaming
 pip install -r requirements.txt
-python main.py
+py -3.12 main.py
 
 ## Como executar os testes
-python -m pytest
+py -3.12 -m pytest
 
 ## Checklist mínimo para entrega
 
