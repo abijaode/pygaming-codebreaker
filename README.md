@@ -1,65 +1,68 @@
-Nome do Jogo
+# CodeBreaker
+
 Projeto final da disciplina de Introdução a Algoritmos/Programação, desenvolvido com Python e Pygame.
 
-Este repositório é um template para os grupos da disciplina. A proposta é começar com uma base funcional e evoluir o jogo ao longo do semestre.
+## Integrantes do grupo
 
-Integrantes do grupo
-Lucas Abijaode Alvarenga
-Estrutura do projeto
-main.py: ponto de entrada da aplicação.
-src/: código-fonte principal do jogo (loop, regras, sprites e dados).
-assets/: imagens, fontes e sons.
-data/: arquivos persistentes (recorde/ranking).
-tests/: testes unitários com pytest.
-docs/: documentação do projeto, incluindo proposta inicial.
-Descrição do jogo
-Descreva brevemente a ideia principal do jogo.
+- Lucas Abijaode Alvarenga
 
-Exemplo:
+## Estrutura do projeto
 
-O jogo consiste em controlar um personagem que deve coletar moedas e evitar obstáculos. O jogador ganha pontos ao coletar itens e perde vidas ao colidir com obstáculos. A partida termina quando o tempo acaba ou quando o jogador perde todas as vidas.
+- `main.py`: ponto de entrada da aplicação.
+- `src/`: código-fonte principal do jogo (loop, regras, sprites e dados).
+- `assets/`: imagens, fontes e sons.
+- `data/`: arquivos persistentes (recorde/ranking).
+- `tests/`: testes unitários com `pytest`.
+- `docs/`: documentação do projeto, incluindo proposta inicial.
 
-Objetivo do jogador
-Explique o que o jogador precisa fazer para vencer ou avançar no jogo.
+## Descrição do jogo
 
-Exemplo:
+CodeBreaker é um jogo de adivinhação alfanumérica inspirado no Termo/Wordle. Um código secreto de 5 caracteres é gerado aleatoriamente a cada partida, usando letras (A-Z) e dígitos (0-9). O jogador tenta descobrir o código em até 6 tentativas e recebe feedback visual colorido a cada tentativa: verde para caractere certo na posição certa, amarelo para caractere presente em posição errada e cinza para caractere ausente. Ao vencer, o jogador salva seu nome no ranking.
 
-O objetivo é coletar a maior quantidade possível de itens antes que o tempo acabe, evitando colisões com os obstáculos.
+## Objetivo do jogador
 
-Regras do jogo
-Liste as principais regras do jogo.
+Descobrir o código secreto de 5 caracteres alfanuméricos em no máximo 6 tentativas, usando o feedback de cores para eliminar possibilidades e afunilar o palpite correto.
 
-Exemplo:
+## Regras do jogo
 
-O jogador se movimenta usando as setas do teclado.
-Cada item coletado aumenta a pontuação.
-Colidir com um obstáculo reduz a quantidade de vidas.
-A partida termina quando o jogador perde todas as vidas ou quando o tempo acaba.
-Controles
-Informe as teclas ou comandos utilizados no jogo.
+- O código secreto tem 5 caracteres sorteados aleatoriamente do conjunto A-Z e 0-9.
+- O jogador tem até 6 tentativas para adivinhar o código.
+- A cada tentativa, cada posição recebe uma cor de feedback:
+  - Verde: caractere certo na posição certa.
+  - Amarelo: caractere existe no código mas está em outra posição.
+  - Cinza: caractere não existe no código.
+- O teclado virtual é atualizado com os status conhecidos de cada caractere.
+- Acertar em menos tentativas gera mais pontos.
+- Ao vencer, o jogador digita o nome para salvar no ranking.
+- Se esgotar as 6 tentativas sem acertar, o código secreto é revelado.
 
-Exemplo:
+## Controles
 
-Seta para cima: mover para cima
-Seta para baixo: mover para baixo
-Seta para esquerda: mover para esquerda
-Seta para direita: mover para direita
-Espaço: realizar ação
-ESC: sair do jogo
-Como executar o projeto
-1. Clonar o repositório
+- Letras (A-Z) e dígitos (0-9): digitar o palpite
+- Backspace: apagar o último caractere
+- Enter: confirmar o palpite
+- ESC: sair do jogo
+
+## Como executar o projeto
+
+### 1. Clonar o repositório
 git clone LINK_DO_REPOSITORIO
-cd NOME_DA_PASTA
+cd PYGAME
 pip install -r requirements.txt
 python main.py
-Como executar os testes
+
+## Como executar os testes
 python -m pytest
-Checklist mínimo para entrega
-Preencher este README com nome final, descrição real, regras e controles do jogo.
-Atualizar docs/proposta.MD com a proposta do grupo.
-Garantir que o jogo executa com python main.py.
-Garantir que os testes passam com pytest.
-Observações para os alunos
-Mantenham o código organizado em módulos pequenos e com responsabilidade clara.
-Comentem partes importantes da lógica, principalmente regras do jogo.
-Registrem decisões técnicas no README do grupo ao longo do desenvolvimento.
+
+## Checklist mínimo para entrega
+
+- [x] Preencher este README com nome final, descrição real, regras e controles do jogo.
+- [x] Atualizar `docs/proposta.MD` com a proposta do grupo.
+- [x] Garantir que o jogo executa com `python main.py`.
+- [x] Garantir que os testes passam com `pytest`.
+
+## Observações para os alunos
+
+- Mantenham o código organizado em módulos pequenos e com responsabilidade clara.
+- Comentem partes importantes da lógica, principalmente regras do jogo.
+- Registrem decisões técnicas no README do grupo ao longo do desenvolvimento.

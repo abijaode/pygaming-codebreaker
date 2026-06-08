@@ -1,143 +1,111 @@
+# jogo.py
+# Controla o estado do jogo e dispara os sons nos momentos certos.
+
 import pygame
-
-from src.config import (
-    LARGURA_TELA,
-    ALTURA_TELA,
-    FPS,
-    TITULO_JOGO,
-    CINZA,
-    CAMINHO_RECORDE,
-    CAMINHO_SPRITES,
-)
-
-from src.funcoes import (
-    calcular_pontos,
-    jogador_perdeu,
-    limitar_valor,
-    verificar_colisao,
-    tomar_dano,
-)
-from src.sprites import pegar_sprite
-from src.dados import (
-    salvar_recorde,
-    carregar_recorde,
-)
+from funcoes import gerar_codigo, avaliar_palpite, palpite_valido, acertou
+from dados import carregar_ranking, salvar_ranking, adicionar_ao_ranking, calcular_pontuacao
+from config import MAX_TENTATIVAS, SOM_BEEP, SOM_CORRETO, SOM_ERRO, SOM_VITORIA, SOM_DERROTA, CORRETO
 
 
-def executar_jogo():
-    """Executa o loop principal do jogo e controla estado, colisões e pontuação."""
-    pygame.init()
-    
-
-    tela = pygame.display.set_mode((LARGURA_TELA, ALTURA_TELA))
-    pygame.display.set_caption(TITULO_JOGO)
-
-    relogio = pygame.time.Clock()
-    rodando = True
-
-    # 1. Carregando as imagens recortadas do Spritesheet
+def carregar_som(caminho):
+    """Tenta carregar um som. Retorna None se o arquivo nao existir."""
+    try:
+        return pygame.mixer.Sound(caminho)
+    except Exception:
+        return None
 
 
-    # Jogador: usando tamanho 110x110 para capturar o quadrado perfeitamente
-    player_image = pegar_sprite(CAMINHO_SPRITES, x=110, y=120, width=190, height=190, scale=0.5)
+class Jogo:
+    """
+    Guarda todo o estado atual da partida e os sons do jogo.
+    """
 
-    # Gema pequena: usando tamanho 64x64
-    gem_image    = pegar_sprite(CAMINHO_SPRITES, x=900, y=690, width=200, height=200, scale=0.5)
+    def __init__(self):
+        # Inicializa o mixer de audio do Pygame
+        pygame.mixer.init()
 
-    # Morcego: usando tamanho 180x120 por causa das asas abertas
-    bat_image    = pegar_sprite(CAMINHO_SPRITES, x=905, y=1060, width=200, height=130, scale=0.5)
-    
-    # 2. Criando a estrutura de Sprites usando Dicionários
-    jogador = {
-        "imagem": player_image,
-        "rect": player_image.get_rect(topleft=(100, 100))
-    }
+        # Carrega os sons (retorna None se o arquivo nao existir)
+        self.som_beep    = carregar_som(SOM_BEEP)
+        self.som_correto = carregar_som(SOM_CORRETO)
+        self.som_erro    = carregar_som(SOM_ERRO)
+        self.som_vitoria = carregar_som(SOM_VITORIA)
+        self.som_derrota = carregar_som(SOM_DERROTA)
 
-    gema = {
-        "imagem": gem_image,
-        "rect": gem_image.get_rect(topleft=(500, 300))
-    }
-    
-    inimigo = {
-        "imagem": bat_image,
-        "rect": bat_image.get_rect(topleft=(200, 500))
-    }
+        self.reiniciar()
+        # O ranking persiste entre partidas
+        self.ranking = carregar_ranking()
 
-    velocidade = 5
-    pontos = 0
-    vidas = 3
-    recorde = carregar_recorde(CAMINHO_RECORDE)
+    def tocar(self, som):
+        """Toca um som se ele foi carregado corretamente."""
+        if som:
+            som.play()
 
-    # Loop principal: processa entrada, atualiza estado e renderiza a cena.
-    while rodando:
-        relogio.tick(FPS)
+    def reiniciar(self):
+        """Reseta todos os dados para comecar uma nova partida."""
+        self.secreto      = gerar_codigo()
+        self.tentativas   = []
+        self.input_atual  = ""
+        self.game_over    = False
+        self.venceu       = False
+        self.pontuacao    = 0
+        self.erro_msg     = ""
+        self.erro_timer   = 0
+        self.tela_atual   = "jogo"
+        self.nome_jogador = ""
+        self.cursor_timer = 0
 
-        for evento in pygame.event.get():
-            if evento.type == pygame.QUIT:
-                rodando = False
+    def digitar(self, char):
+        """Adiciona um caractere ao palpite e toca o beep."""
+        from config import CHARSET, TAMANHO
+        if char.upper() in CHARSET and len(self.input_atual) < TAMANHO:
+            self.input_atual += char.upper()
+            self.tocar(self.som_beep)  # beep a cada tecla digitada
 
-        teclas = pygame.key.get_pressed()
+    def apagar(self):
+        """Remove o ultimo caractere digitado."""
+        self.input_atual = self.input_atual[:-1]
 
-        # Movimentação alterando direto os eixos X e Y do retângulo do jogador
-        if teclas[pygame.K_LEFT]:
-            jogador["rect"].x -= velocidade
-        if teclas[pygame.K_RIGHT]:
-            jogador["rect"].x += velocidade
-        if teclas[pygame.K_UP]:
-            jogador["rect"].y -= velocidade
-        if teclas[pygame.K_DOWN]:
-            jogador["rect"].y += velocidade
+    def confirmar(self):
+        """
+        Valida e processa o palpite atual.
+        Toca o som adequado conforme o resultado.
+        """
+        palpite = self.input_atual.upper()
 
-        # Limitando o jogador dentro das bordas da tela usando as propriedades do Rect
-        jogador["rect"].x = limitar_valor(jogador["rect"].x, 0, LARGURA_TELA - jogador["rect"].width)
-        jogador["rect"].y = limitar_valor(jogador["rect"].y, 0, ALTURA_TELA - jogador["rect"].height)
+        if not palpite_valido(palpite):
+            self.erro_msg   = "Digite exatamente 5 letras ou numeros."
+            self.erro_timer = 140
+            self.tocar(self.som_erro)  # som de erro no palpite invalido
+            return
 
-        # Verificação de colisão com a Gema (antigo 'item')
-        if verificar_colisao(jogador["rect"], gema["rect"]):
-            pontos = calcular_pontos(pontos, 10)
+        resultado = avaliar_palpite(self.secreto, palpite)
+        self.tentativas.append(resultado)
+        self.input_atual = ""
 
-            # Move a gema de lugar ao coletar
-            gema["rect"].x += 80
-            gema["rect"].y += 50
+        if acertou(resultado):
+            self.venceu     = True
+            self.game_over  = True
+            self.pontuacao  = calcular_pontuacao(len(self.tentativas))
+            self.tela_atual = "nome"
+            self.tocar(self.som_vitoria)  # som de vitoria ao desarmar a bomba
 
-            # Se a gema sair da tela, volta para uma posição segura
-            if gema["rect"].x > LARGURA_TELA - gema["rect"].width:
-                gema["rect"].x = 50
-            if gema["rect"].y > ALTURA_TELA - gema["rect"].height:
-                gema["rect"].y = 50
+        elif len(self.tentativas) >= MAX_TENTATIVAS:
+            self.game_over  = True
+            self.tela_atual = "fim"
+            self.tocar(self.som_derrota)  # som de explosao ao perder
 
-        # Verificação de colisão com o Inimigo
-        if verificar_colisao(jogador["rect"], inimigo["rect"]):
-            vidas = tomar_dano(vidas, 1)
+        else:
+            # Verifica se pelo menos uma letra ficou verde
+            tem_correto = any(item["status"] == CORRETO for item in resultado)
+            if tem_correto:
+                self.tocar(self.som_correto)  # som de acerto parcial
 
-            # Afasta o inimigo ao colidir
-            inimigo["rect"].x += 80
-            inimigo["rect"].y += 50
-
-            if inimigo["rect"].x > LARGURA_TELA - inimigo["rect"].width:
-                inimigo["rect"].x = 50
-            if inimigo["rect"].y > ALTURA_TELA - inimigo["rect"].height:
-                inimigo["rect"].y = 50
-
-        # Regras de fim de jogo e recorde
-        if jogador_perdeu(vidas):
-            rodando = False
-
-        if pontos > recorde:
-            recorde = pontos
-            salvar_recorde(CAMINHO_RECORDE, recorde)
-
-        pygame.display.set_caption(
-            f"{TITULO_JOGO} | Pontos: {pontos} | Recorde: {recorde} | Vidas: {vidas}"
+    def salvar_nome(self):
+        """Salva a pontuacao no ranking e vai para a tela de fim."""
+        self.ranking = adicionar_ao_ranking(
+            self.nome_jogador or "Anonimo",
+            len(self.tentativas),
+            self.ranking
         )
-
-        tela.fill(CINZA)
-
-        # Desenhando os elementos na tela passando a imagem e o rect de cada dicionário
-        tela.blit(gema["imagem"], gema["rect"])
-        tela.blit(inimigo["imagem"], inimigo["rect"])
-        tela.blit(jogador["imagem"], jogador["rect"])
-
-        pygame.display.flip()
-
-    pygame.quit()
+        salvar_ranking(self.ranking)
+        self.tela_atual = "fim"
