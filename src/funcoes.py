@@ -1,6 +1,7 @@
 # funcoes.py
 # Contem a logica pura do jogo: gerar codigo, avaliar palpite, etc.
 
+#** O comando all tem a função de atribuir o valor True/False quando todos os caracteres da variaveis cumprirem alguma funcao**
 
 import random
 from config import CHARSET, TAMANHO, CORRETO, PRESENTE, AUSENTE
