@@ -1,6 +1,6 @@
 # funcoes.py
 # Contem a logica pura do jogo: gerar codigo, avaliar palpite, etc.
-# Nenhuma funcao aqui depende do Pygame — por isso e facil testar.
+
 
 import random
 from config import CHARSET, TAMANHO, CORRETO, PRESENTE, AUSENTE

@@ -1,6 +1,5 @@
 # tests/test_logica.py
 # Testes das funcoes de logica do jogo.
-# Execute com: python -m pytest tests/ -v
 
 import sys
 import os

@@ -1,7 +1,6 @@
 # config.py
 # Guarda todas as configuracoes do jogo em um so lugar.
-# Assim, se quiser mudar algo (cor, tamanho, som),
-# basta alterar aqui sem precisar mexer nos outros arquivos.
+
 
 import string
 import os

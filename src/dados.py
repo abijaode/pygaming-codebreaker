@@ -1,6 +1,6 @@
 # dados.py
 # Responsavel por ler e salvar dados em arquivo.
-# No nosso caso, cuida do ranking (lista dos melhores jogadores).
+
 
 from config import ARQUIVO_RANKING, MAX_TENTATIVAS
 

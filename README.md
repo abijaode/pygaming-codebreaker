@@ -2,7 +2,7 @@
 
 Projeto final da disciplina de Introdução a Algoritmos/Programação, desenvolvido com Python e Pygame.
 
-> **Observação ao professor:** Este projeto foi desenvolvido com maior agilidade pois já possuía uma versão anterior do jogo implementada em linguagem C, desenvolvida como exercício pessoal durante estudos no Ibmec. A lógica central (avaliação de palpites, ranking e sistema de pontuação) foi reescrita do zero em Python, seguindo os conceitos e a estrutura exigidos pela disciplina.
+> **Observação:** Este projeto foi desenvolvido com maior agilidade pois já possuía uma versão anterior do jogo implementada em linguagem C, desenvolvida como exercício pessoal durante estudos no Ibmec. A lógica central (avaliação de palpites, ranking e sistema de pontuação) foi reescrita do zero em Python, seguindo os conceitos e a estrutura exigidos pela disciplina.
 
 ## Integrantes do grupo
 
@@ -19,7 +19,7 @@ Projeto final da disciplina de Introdução a Algoritmos/Programação, desenvol
 
 ## Descrição do jogo
 
-CodeBreaker é um jogo de adivinhação alfanumérica inspirado no Termo/Wordle. Um código secreto de 5 caracteres é gerado aleatoriamente a cada partida, usando letras (A-Z) e dígitos (0-9). O jogador tenta descobrir o código em até 6 tentativas e recebe feedback visual colorido a cada tentativa: verde para caractere certo na posição certa, amarelo para caractere presente em posição errada e cinza para caractere ausente. Ao vencer, o jogador salva seu nome no ranking.
+CodeBreaker é um jogo de adivinhação de codigos inspirado no Termo/Wordle. Um código secreto de 5 caracteres é gerado aleatoriamente a cada partida, usando letras (A-Z) e dígitos (0-9). O jogador tenta descobrir o código em até 6 tentativas e recebe feedback visual colorido a cada tentativa: verde para caractere certo na posição certa, amarelo para caractere presente em posição errada e cinza para caractere ausente. Ao vencer, o jogador salva seu nome no ranking.
 
 ## Objetivo do jogador
 
@@ -48,9 +48,13 @@ Descobrir o código secreto de 5 caracteres alfanuméricos em no máximo 6 tenta
 ## Como executar o projeto
 
 ### 1. Clonar o repositório
+
 git clone https://github.com/abijaode/pygaming.git
+
 cd pygaming
+
 pip install -r requirements.txt
+
 py -3.12 main.py
 
 ## Como executar os testes
