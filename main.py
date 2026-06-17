@@ -1,7 +1,7 @@
 # main.py
 # Ponto de entrada do jogo.
 # Inicia o Pygame, carrega os recursos e roda o loop principal.
-# Para rodar: python main.py
+
 
 import sys
 import os
